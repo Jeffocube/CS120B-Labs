@@ -22,7 +22,8 @@ int main(void){
 		tempD = 0x00;
 		tempHold = (PINA + PINB + PINC);
 		tempD = tempD | tempHold;
-		tempD = tempD << 2;
+		tempD = tempD << 1;
+		tempD = tempD & 0xFD;
 		//if
 		if(tempHold > 0x8C){
 			tempD = tempD | 0x01;
