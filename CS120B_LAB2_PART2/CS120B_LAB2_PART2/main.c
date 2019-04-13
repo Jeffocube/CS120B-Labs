@@ -13,31 +13,27 @@
 
 int main(void){
 	DDRA = 0x00; PORTA = 0xFF;
-	DDRC = 0xFF; PORTC = 0x00;
-	unsigned char tempC = 0x00;
-  unsigned char cntAvail = 0x00;
+	DDRB = 0x00; PORTB = 0xFF;
+	DDRC = 0x00; PORTC = 0xFF;
+	DDRD = 0xFF; PORTD = 0x00;
+	unsigned char tempD = 0x00;
+	unsigned char tempHold = 0x00;
 	while(1){
-		cntAvail = 0x00;
-		tempC = PINA & 0x0F;
-		//switch
-		if((tempC & 0x01) == 0x01){
-			cntAvail++;
+		tempD = 0x00;
+		tempHold = (PINA + PINB + PINC);
+		tempD = tempD | tempHold;
+		tempD = tempD & 0xFC;
+		//if
+		if(tempHold > 0x8C){
+			tempD = tempD | 0x01;
 		}
-		if((tempC & 0x02) == 0x02){
-			cntAvail++;
+		if((PINA - PINC) > 0x50 || (PINC - PINA) > 0x50 ){
+			tempD = tempD | 0x02;
 		}
-		if((tempC & 0x04) == 0x04){
-			cntAvail++;
-		}
-		if((tempC & 0x08) == 0x08){
-			cntAvail++;
-		}
-    if(tempC == 0x0F){
-      cntAvail = cntAvail | 0x80;
-    }
 		//set
-		PORTC = cntAvail;
+		PORTD = tempD;
 		
 	}
 	return 0;
 }
+

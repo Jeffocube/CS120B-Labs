@@ -21,25 +21,40 @@ int main(void)
 			tempC = tempC | 0x20;
 			tempC = tempC | 0x40;
 		}
-		if((PINA & 0x0F) < 5)
+		if((PINA & 0x0F) < 5 && (PINA & 0x0F) >= 3)
 		{
 			tempC = tempC | 0x10;
+			tempC = tempC | 0x20;
 			tempC = tempC | 0x40;
 		}
-		if((PINA & 0x0F) < 7)
+		if((PINA & 0x0F) < 7 && (PINA & 0x0F) >= 5)
 		{
+			tempC = tempC | 0x10;
+			tempC = tempC | 0x20;
 			tempC = tempC | 0x08;
 		}
-		if((PINA & 0x0F) < 10)
+		if((PINA & 0x0F) < 10 && (PINA & 0x0F) >= 7)
 		{
+			tempC = tempC | 0x10;
+			tempC = tempC | 0x20;
+			tempC = tempC | 0x08;
 			tempC = tempC | 0x04;
 		}
-		if((PINA & 0x0F) < 13)
+		if((PINA & 0x0F) < 13 && (PINA & 0x0F) >= 10)
 		{
+			tempC = tempC | 0x10;
+			tempC = tempC | 0x20;
+			tempC = tempC | 0x08;
 			tempC = tempC | 0x02;
+			tempC = tempC | 0x04;
 		}
-		if((PINA & 0x0F) < 16)
+		if((PINA & 0x0F) < 16 && (PINA & 0x0F) >= 13)
 		{
+			tempC = tempC | 0x10;
+			tempC = tempC | 0x20;
+			tempC = tempC | 0x08;
+			tempC = tempC | 0x02;
+			tempC = tempC | 0x04;
 			tempC = tempC | 0x01;
 		}
 		if((PINA & 0x10) == 0x10)

@@ -25,10 +25,11 @@ int main(void)
 		{
 			tempB = tempB | 0x02;
 		}
-		if(tempSense < 70 && tempSense > 5)
+		if(tempSense <= 70 && tempSense > 5)
 		{
 			tempB = tempB | 0x04;
 		}
+		
 		PORTB = tempB;
     }
 }
