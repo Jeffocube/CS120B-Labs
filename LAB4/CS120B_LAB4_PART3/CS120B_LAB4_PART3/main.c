@@ -18,44 +18,36 @@ int main(void)
 	BUTTON = 0x00;
     while (1) 
     {
-		START:
 		BUTTON = PINA & 0x07;
-		switch(BUTTON)
+		LABEL:
+		if(BUTTON == 0x00)
+			goto LABEL;
+		switch(s)
 		{
-			case 0x01 :
-				if(s == X){
-					s = HASH;
-				}else{
-					s = X;
-					goto START;
-				}
-				break;
-			case 0x02 :
-				if(s == HASH){
+			case HASH :
+				if(BUTTON == 0x04)
+				{
 					s = Y;
-				}else{
-					s = X;
-					goto START;
+				}
+				else
+				{
+					s = HASH;
 				}
 				break;
-			case 0x04 :
-				if(s == Y){
+			case Y :
+				if(BUTTON == 0x02)
+				{
 					s = OPEN;
-				}else{
-					s = X;
-					goto START;
 				}
-				break;
-			case 0x00 :
+				else
+				{
+					s = HASH;
+				}
 				break;
 			default :
-				s = X;
-				goto START;
 				break;
+				
 		}
-		if((PINA & 0x07) == 0x00)
-			goto START;
-		while(BUTTON == (PINA & 0x07) ){ }
 		switch(s)
 		{
 			case X :
@@ -66,11 +58,11 @@ int main(void)
 				break;
 			case OPEN :
 				PORTB = 0x01;
-				while((PINA & 0x80) != 0x80){ }
 				s = X;
 				PORTB = 0x00;
 				break;
 		}
+		while(BUTTON == (PINA & 0x0F)){ }
     }
 }
 

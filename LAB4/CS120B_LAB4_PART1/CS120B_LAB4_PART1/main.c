@@ -20,6 +20,7 @@ int main(void)
     while (1) 
     {
 		tempB = 0x00;
+		LABEL:
 		BUTTON = (PINA & 0x01);
 		switch(BUTTON)
 		{
@@ -37,8 +38,6 @@ int main(void)
 			default :
 				break;
 		}
-		while(BUTTON == (PINA & 0x01)){}
-		BUTTON = 0x00;
 		switch(s)
 		{
 			case ZERO :
@@ -51,6 +50,8 @@ int main(void)
 				break;
 		}
 		PORTB = tempB;
+		while(BUTTON == (PINA & 0x01) && BUTTON != 0x00){}
+		BUTTON = 0x00;
     }
 }
 
