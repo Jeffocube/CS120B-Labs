@@ -13,80 +13,73 @@ int main(void)
 {
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRC = 0xFF; PORTC = 0x00;
-	enum state {UP, DOWN, ZERO, NOTHING};
+	enum state {WAITIN, WAITLIFT};
 	enum state s;
 	unsigned char BUTTON;
 	unsigned char numOut;
 	numOut = 7;
-	s = ZERO;
+	s = WAITIN;
 	PORTC = numOut;
+	unsigned i;
 	while (1)
 	{
+		i = 0;
 		BUTTON = (PINA & 0x03);
+		while(i < 50000){
+			if((PINA & 0x03) == 0x00)
+				BUTTON = (PINA & 0x00);
+			i++;
+			
+		}
 		switch(s)
 		{
-			case UP :
-				if(BUTTON == 0x02 && numOut < 9)
-					s = UP;
-				else if(BUTTON == 0x02 && numOut == 9)
-					s = NOTHING;
-				else if(BUTTON == 0x01)
-					s = DOWN;
-				else if(BUTTON == 0x00)
-					s = ZERO;
-				else
-					s = NOTHING;
+			case WAITIN :
+				if(BUTTON == 0x3){
+					break;
+				}
+				if(BUTTON == 0x02){
+					if(numOut == 9){
+						break;
+					}else{
+						s = WAITLIFT;
+						numOut++;
+						break;
+					}
+				}else if(BUTTON == 0x01){
+					if(numOut == 0){
+						break;
+					}else{
+						s = WAITLIFT;
+						numOut--;
+						break;
+					}
+				}else{
+					s = WAITLIFT;
+					numOut = 0;
+					break;
+				}
 			break;
-			case DOWN :
-				if(BUTTON == 0x02)
-					s = UP;
-				else if(BUTTON == 0x01 && numOut > 0)
-					s = DOWN;
-				else if(BUTTON == 0x01 && numOut == 0)
-					s = NOTHING;
-				else if(BUTTON == 0x00)
-					s = ZERO;
+			case WAITLIFT :
+				
+				if(BUTTON != 0x3)
+					s = WAITLIFT;
 				else
-					s = NOTHING;
-			break;
-			case ZERO:
-				if(BUTTON == 0x02)
-					s = UP;
-				else
-					s = NOTHING;
-			break;
-			case NOTHING:
-				if(BUTTON == 0x02 && numOut < 9)
-					s = UP;
-				else if(BUTTON == 0x01 && numOut > 0)
-					s = DOWN;
-				else if(BUTTON == 0x00)
-					s = ZERO;
-				else
-					s = NOTHING;
-			break;
+					s = WAITIN;
+				break;
 			default :
 			break;
 					
 		}
 		switch(s)
 		{
-			case UP :
-				numOut++;
+			case WAITIN :
 			break;
-			case DOWN :
-				numOut--;
-			break;
-			case NOTHING :
-			break;
-			case ZERO :
-				numOut = 0;
+			case WAITLIFT :
 			break;
 			default :
 			break;
 		}
 		PORTC = numOut;
-		while(BUTTON == (PINA & 0x03)){}
 	}
 }
 
