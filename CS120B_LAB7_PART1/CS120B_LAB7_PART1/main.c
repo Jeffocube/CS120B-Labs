@@ -10,6 +10,7 @@
 // tick
 unsigned char tempC;
 unsigned char num;
+unsigned char button;
 // end
 volatile unsigned char TimerFlag = 0;
 
@@ -42,24 +43,47 @@ ISR(TIMER1_COMPA_vect){
 	}
 }
 void tick(){
-	LCD_WriteData(num + '0');
-	if(num > 9)
+	LCD_Cursor(1);
+	if(button == 0x01){
+		num++;
+	}
+	if(button == 0x02){
+		num--;
+	}
+	if(button == 0x03){
 		num = 0;
+	}
+	if(num > 9){
+		num = 0;
+	}
+	LCD_WriteData(num + '0');
+	button = 0;
 }
 int main(void)
 {
+	DDRA = 0x00; PORTA = 0xFF;
 	DDRC = 0xFF; PORTC = 0x00; // LCD data lines
 	DDRD = 0xFF; PORTD = 0x00; // LCD control lines
 	// Initializes the LCD display
 	LCD_init();
-	
-	// Starting at position 1 on the LCD screen, writes Hello World
-	LCD_DisplayString(1, "Hello World");
 	tempC = 0x00;
 	TimerSet(1000);
 	TimerOn();
-	while(TimerFlag){
+	num = 0x00;
+	while(1){
+		while(!TimerFlag){
+			if((PINA & 0x03) == 0x00){
+				button = 0x03;
+				break;
+			}
+			if((PINA & 0x03) == 0x01)
+				button = 0x02;
+			if((PINA & 0x03) == 0x02)
+				button = 0x01;
+		}
+		while(!TimerFlag){}
 		tick();
+		TimerFlag = 0;
 	}
 }
 
